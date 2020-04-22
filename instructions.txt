@@ -1,0 +1,16 @@
+## Add code coverage reporting
+dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.1.1
+
+dotnet build --configuration Release
+
+# run with test with coverage reports
+dotnet test --no-build --configuration Release `
+  /p:CollectCoverage=true `
+  /p:CoverletOutputFormat=cobertura `
+  /p:CoverletOutput=./TestResults/Coverage/
+
+# convert the Cobertura file to HTML:
+~/.dotnet/tools/reportgenerator `
+  -reports:./Tailspin.SpaceGame.Web.Tests/TestResults/Coverage/coverage.cobertura.xml `
+  -targetdir:./CodeCoverage `
+  -reporttypes:HtmlInline_AzurePipelines
