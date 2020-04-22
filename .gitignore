@@ -333,3 +333,7 @@ ASALocalRun/
 
 # SonarQube
 .sonarqube/
+
+# Visual Studio Code
+.vscode
+
