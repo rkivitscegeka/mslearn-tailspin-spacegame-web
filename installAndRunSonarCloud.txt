@@ -1,0 +1,32 @@
+dotnet tool install --global dotnet-sonarscanner
+
+# Make sure the scanner can find your Java 
+echo JAVA_HOME
+
+# Command copied from SonarCloud, containing the project data and crdentials
+sonar-scanner.bat \
+  -D"sonar.organization=mslearn-sonarcloud" \
+  -D"sonar.projectKey=rkivitscegeka_mslearn-tailspin-spacegame-web" \
+  -D"sonar.sources=." \
+  -D"sonar.host.url=https://sonarcloud.io" \
+  -D"sonar.login=0a05c2587796ca92eea752543b0463d37256cc2b"
+
+# Start Sonar. Copy your data in here
+~/.dotnet/tools/dotnet-sonarscanner begin `
+  /k:"rkivitscegeka_mslearn-tailspin-spacegame-web" `
+  /d:sonar.host.url="https://sonarcloud.io" `
+  /d:sonar.login="0a05c2587796ca92eea752543b0463d37256cc2b" `
+  /d:sonar.cs.opencover.reportsPaths="./Tailspin.SpaceGame.Web.Tests/TestResults/Coverage/coverage.opencover.xml" `
+  /d:sonar.exclusions="**/wwwroot/lib/**/*" `
+  /o:"mslearn-sonarcloud"
+
+# Build
+dotnet build --no-incremental --configuration Release
+
+# Test, with OpenCover for SonarCloud
+dotnet test --no-build --configuration Release `
+  /p:CollectCoverage=true `
+  /p:CoverletOutputFormat="cobertura%2copencover" `
+  /p:CoverletOutput=./TestResults/Coverage/
+
+~/.dotnet/tools/dotnet-sonarscanner end /d:sonar.login="0a05c2587796ca92eea752543b0463d37256cc2b"

@@ -36,7 +36,7 @@ namespace TailSpin.SpaceGame.Web.Models
     public struct ScoreProfile
     {
         // The player's score.
-        public Score Score;
+        public Score Score {get; set;}
         // The player's profile.
         public Profile Profile;
     }
