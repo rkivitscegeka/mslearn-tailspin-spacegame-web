@@ -1,0 +1,41 @@
+
+az vm create \
+    --name MyLinuxAgent \
+    --resource-group learn-be2aefbf-c5fb-4f79-a8e3-008db9482d84 \
+    --image Canonical:UbuntuServer:16.04-LTS:latest \
+    --location eastus \
+    --size Standard_DS2_v2 \
+    --admin-username azureuser \
+    --generate-ssh-keys
+
+## Create personal access token in AzureDevOps with Build:Read+Execute and Agent:Read+Execute
+bina3xsxrrv6pkgc5e4ce4acub5zsqzato5yg7zcobxuomq25g3q
+
+
+# Connect to the build agent
+IPADDRESS=$(az vm show \
+  --name MyLinuxAgent \
+  --resource-group learn-be2aefbf-c5fb-4f79-a8e3-008db9482d84 \
+  --show-details \
+  --query [publicIps] \
+  --output tsv)
+# This works with the created ssh keys above
+ssh azureuser@$IPADDRESS
+
+## Make use you are up to date
+sudo apt-get update
+
+# install build tools with a script
+curl https://raw.githubusercontent.com/MicrosoftDocs/mslearn-azure-pipelines-build-agent/master/build-tools.sh > build-tools.sh
+
+        
+chmod u+x build-tools.sh
+sudo ./build-tools.sh
+
+## Install the build agent
+curl https://raw.githubusercontent.com/MicrosoftDocs/mslearn-azure-pipelines-build-agent/master/build-agent.sh > build-agent.sh
+# Set env vars for the script
+export AZP_AGENT_NAME=MyLinuxAgent
+export AZP_URL=https://dev.azure.com/raoul3seven
+export AZP_TOKEN=token
+export AZP_POOL=MyAgentPool
